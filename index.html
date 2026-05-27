@@ -289,55 +289,56 @@
   /* Annotated panel-refs — callouts connected to figure regions by arrows */
   /* Shell variant: callouts on the LEFT, figure on the RIGHT, with an SVG
      gutter in between that draws a connector from each callout to the exact
-     sidebar-row center in the figure. Figure renders at 880×550 (display) so
-     the sidebar rows are tall enough for the arrows to land cleanly. */
+     sidebar-row center in the figure. Layout stays within the doc's content
+     width — callouts wrap their description onto a second line so the column
+     can be narrow without overflowing left of the surrounding paragraphs. */
   .panel-ref--shell { grid-template-columns: 1fr; }
-  /* Break out of the doc's 984px content column so the figure can grow to
-     880px and the callout column still has room for descriptive text. */
   .panel-ref--shell .annot-row {
     display: grid;
-    grid-template-columns: 1fr 110px var(--fig-w, 880px);
+    grid-template-columns: 1fr 60px var(--fig-w, 724px);
     gap: 0;
     align-items: start;
     position: relative;
-    width: calc(100% + 240px);
-    margin-left: -120px;
-    margin-right: -120px;
   }
   .panel-ref--shell .annot-fig--shell { grid-column: 3; }
   .panel-ref--shell .annot-fig--shell figure { margin: 0; }
-  .panel-ref--shell .annot-fig--shell .iframe-frame { --display-w: 880; }
+  .panel-ref--shell .annot-fig--shell .iframe-frame { --display-w: 724; }
   .panel-ref--shell .annot-side--left {
     grid-column: 1;
     position: relative;
-    min-height: 550px;
+    min-height: 460px;
   }
   .panel-ref--shell .annot-side--left .annot-callout {
     position: absolute;
     top: var(--y, 0);
-    left: 0; right: 0;
+    left: 0; right: 14px;
     transform: translateY(-50%);
-    padding: 5px 10px 5px 28px;
+    padding: 5px 10px 6px 28px;
     border: 1px solid var(--nm-border);
     border-radius: 7px;
     background: var(--nm-panel-strong);
-    font-size: 12px;
-    line-height: 1.35;
+    font-size: 11.5px;
+    line-height: 1.4;
     box-shadow: var(--nm-shadow-soft);
+  }
+  /* Title goes on line 1, description flows to line 2 below it. */
+  .panel-ref--shell .annot-side--left .annot-callout b { display: block; }
+  /* Number badge aligns to the first line, not the vertical center of the
+     two-line card. */
+  .panel-ref--shell .annot-side--left .annot-callout .annot-num {
+    top: 6px;
+    transform: none;
   }
   /* SVG gutter — paths draw from callout-right (left edge of gutter) to
      sidebar-row-center (right edge of gutter). Sized to match the figure
      height so the viewBox y axis lines up with the iframe's y axis. */
   .panel-ref--shell .annot-arrows {
     grid-column: 2;
-    width: 100%; height: 550px;
+    width: 100%; height: 452px;
     overflow: visible;
   }
   @media (max-width: 760px), print {
-    .panel-ref--shell .annot-row {
-      display: block;
-      width: 100%; margin-left: 0; margin-right: 0;
-    }
+    .panel-ref--shell .annot-row { display: block; }
     .panel-ref--shell .annot-side--left {
       position: static;
       min-height: 0;
@@ -345,7 +346,11 @@
       display: flex; flex-direction: column; gap: 8px;
     }
     .panel-ref--shell .annot-side--left .annot-callout {
-      position: static; transform: none;
+      position: static; transform: none; right: 0;
+    }
+    .panel-ref--shell .annot-side--left .annot-callout b { display: inline; }
+    .panel-ref--shell .annot-side--left .annot-callout .annot-num {
+      top: 50%; transform: translateY(-50%);
     }
     .panel-ref--shell .annot-arrows { display: none; }
   }
@@ -723,47 +728,47 @@
     <div class="panel-ref panel-ref--annot panel-ref--shell">
       <div class="annot-row">
         <div class="annot-side annot-side--left">
-          <div class="annot-callout" style="--y:22px;">
+          <div class="annot-callout" style="--y:32px;">
             <span class="annot-num">1</span>
             <b>Dataset Explorer</b> — the shared dataset catalog.
           </div>
-          <div class="annot-callout" style="--y:54px;">
+          <div class="annot-callout" style="--y:80px;">
             <span class="annot-num">2</span>
             <b>My Data</b> — your project's file manager.
           </div>
-          <div class="annot-callout" style="--y:86px;">
+          <div class="annot-callout" style="--y:128px;">
             <span class="annot-num">3</span>
             <b>Editing</b> — annotation editor. Badge = job count.
           </div>
-          <div class="annot-callout" style="--y:118px;">
+          <div class="annot-callout" style="--y:176px;">
             <span class="annot-num">4</span>
             <b>Activity</b> — events across your projects.
           </div>
-          <div class="annot-callout" style="--y:150px;">
+          <div class="annot-callout" style="--y:224px;">
             <span class="annot-num">5</span>
             <b>Project members</b> — invite, set roles.
           </div>
-          <div class="annot-callout" style="--y:509px;">
+          <div class="annot-callout" style="--y:419px;">
             <span class="annot-num">6</span>
             <b>Settings + Help</b> — utility row above your avatar.
           </div>
         </div>
         <!-- Arrows: each path goes from (0, callout-y) to (right, sidebar-row-y).
-             Sidebar-row centers in display coords (scale = 880 / 1440 = 0.611):
-             DE 116 · MD 135 · ED 155 · AC 175 · PM 195 · S+H 509. -->
-        <svg class="annot-arrows" viewBox="0 0 110 550" preserveAspectRatio="none" aria-hidden="true">
+             Sidebar-row centers in display coords (scale = 724 / 1440 = 0.503):
+             DE 95 · MD 112 · ED 128 · AC 144 · PM 160 · S+H 419. -->
+        <svg class="annot-arrows" viewBox="0 0 60 452" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <marker id="annot-arrow-head" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse">
               <path d="M0,0 L7,3.5 L0,7 z" fill="var(--nm-accent-a)" />
             </marker>
           </defs>
           <g stroke="var(--nm-accent-a)" stroke-width="1.5" stroke-dasharray="4 3" fill="none" marker-end="url(#annot-arrow-head)">
-            <path d="M 0  22 L 108 116" />
-            <path d="M 0  54 L 108 135" />
-            <path d="M 0  86 L 108 155" />
-            <path d="M 0 118 L 108 175" />
-            <path d="M 0 150 L 108 195" />
-            <path d="M 0 509 L 108 509" />
+            <path d="M 0  32 L 58  95" />
+            <path d="M 0  80 L 58 112" />
+            <path d="M 0 128 L 58 128" />
+            <path d="M 0 176 L 58 144" />
+            <path d="M 0 224 L 58 160" />
+            <path d="M 0 419 L 58 419" />
           </g>
         </svg>
         <div class="annot-fig annot-fig--shell">
