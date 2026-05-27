@@ -279,8 +279,10 @@
   .panel-ref--stacked { grid-template-columns: 1fr; }
   .panel-ref--stacked figure { grid-column: 1; max-width: 100%; }
   .panel-ref--stacked figure .iframe-frame {
-    width: 100% !important;
-    --display-w: 100% !important;
+    /* Respect the inline --display-w. Overriding it to 100% breaks the
+       iframe's transform: scale(calc(--display-w / --frame-w)) — calc()
+       resolves 100%/360 as 1/360, collapsing the iframe to ~1 px. */
+    margin-inline: auto;
   }
   .panel-ref--stacked .panel-ref-body { grid-column: 1; }
 
