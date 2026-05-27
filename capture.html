@@ -1,0 +1,83 @@
+<!doctype html>
+<!-- capture.html — renders one artboard at native pixel size based on URL hash.
+     Embedded as iframe inside the User Guide so text stays vector-sharp at any
+     CSS scale. Hash format: #shell, #landing, #explorer, #mydata, #add, #members.
+     Optional ?theme=dark switches Mission Console. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>capture · NM Data Platform redesign</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <style>
+    html, body { margin: 0; padding: 0; background: transparent; height: 100%; }
+    html { width: 100%; }
+    #root { display: block; width: 100%; height: 100%; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="primitives.jsx"></script>
+  <script type="text/babel" src="screens/shell.jsx"></script>
+  <script type="text/babel" src="screens/landing.jsx"></script>
+  <script type="text/babel" src="screens/explorer.jsx"></script>
+  <script type="text/babel" src="screens/mydata.jsx"></script>
+  <script type="text/babel" src="screens/add-to-project.jsx"></script>
+  <script type="text/babel" src="screens/members.jsx"></script>
+  <script type="text/babel" src="screens/mydata-v4.jsx"></script>
+  <script type="text/babel" src="screens/editing.jsx"></script>
+
+  <script type="text/babel" data-presets="react">
+    const DIMS = {
+      shell:    { Comp: ShellArtboard,         w: 1440, h: 900 },
+      landing:  { Comp: LandingArtboard,       w: 1440, h: 900 },
+      explorer: { Comp: ExplorerArtboard,      w: 1440, h: 960 },
+      mydata:   { Comp: MyDataV4Files,         w: 1440, h: 900 },
+      "mydata-files":   { Comp: MyDataV4Files,         w: 1440, h: 900 },
+      "mydata-imports": { Comp: MyDataV4Imports,       w: 1440, h: 900 },
+      "mydata-exports": { Comp: MyDataV4Exports,       w: 1440, h: 900 },
+      "mydata-history": { Comp: MyDataV4History,       w: 1440, h: 900 },
+      add:      { Comp: AddToProjectArtboard,  w: 720,  h: 620 },
+      members:  { Comp: MembersArtboard,       w: 1440, h: 960 },
+      editing:  { Comp: EditingArtboard,        w: 1440, h: 960 },
+      "editing-tree":      { Comp: EditingTreeOnly,      w: 260,  h: 520 },
+      "editing-toolbar":   { Comp: EditingToolbarOnly,   w: 1080, h: 80  },
+      "editing-viewports": { Comp: EditingViewportsOnly, w: 920,  h: 500 },
+      "editing-segments":  { Comp: EditingSegmentsOnly,  w: 360,  h: 620 },
+      "editing-selection": { Comp: EditingSelectionOnly, w: 360,  h: 540 },
+      "editing-timeline":  { Comp: EditingTimelineOnly,  w: 1200, h: 320 },
+    };
+
+    function pickFromURL() {
+      const hash = (window.location.hash || "#shell").slice(1);
+      const params = new URLSearchParams(window.location.search);
+      const theme  = params.get("theme") === "dark" ? "dark" : "light";
+      return { key: hash, theme };
+    }
+
+    let root;
+    function render({ key, theme }) {
+      const d = DIMS[key] || DIMS.shell;
+      document.documentElement.classList.toggle("nm-theme-dark", theme === "dark");
+      // Body sized to artboard so the iframe's intrinsic size matches; no
+      // outer padding, no shadow — the User Guide wraps it for chrome.
+      document.body.style.width  = d.w + "px";
+      document.body.style.height = d.h + "px";
+      if (!root) root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(
+        <div style={{ width: d.w, height: d.h }}>
+          <d.Comp />
+        </div>
+      );
+    }
+
+    render(pickFromURL());
+    window.addEventListener("hashchange", () => render(pickFromURL()));
+
+    // Optional global hook for the original save_screenshot fixture flow
+    window.__pick = (key, theme = "light") => render({ key, theme });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NM Data Platform · Complete User Guide</title>
+<link rel="stylesheet" href="design-system.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: var(--nm-page-glow); color: var(--nm-text); font-family: 'Manrope', system-ui, sans-serif; }
+  .doc { max-width: 1080px; margin: 0 auto; padding: 40px 48px 64px; }
+
+  /* Cover */
+  .cover { padding-bottom: 24px; margin-bottom: 28px; border-bottom: 1px solid var(--nm-border); }
+  .cover .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--nm-accent-a); letter-spacing: .16em; text-transform: uppercase; }
+  .cover h1 { font-family: 'Space Grotesk'; margin: 8px 0 10px; font-size: 44px; line-height: 1.02; font-weight: 700; letter-spacing: -0.03em; }
+  .cover p.lead { font-size: 15px; line-height: 1.5; color: var(--nm-text-dim); max-width: 680px; margin: 0; }
+  .cover .meta { margin-top: 18px; display: flex; gap: 18px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--nm-text-faint); text-transform: uppercase; letter-spacing: .14em; flex-wrap: wrap; }
+  .cover .meta b { color: var(--nm-text-dim); font-weight: 500; }
+
+  /* Headings */
+  h2 { font-family: 'Space Grotesk'; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 4px 0 4px; line-height: 1.15; display: block; clear: both; }
+  h3 { font-family: 'Space Grotesk'; font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin: 22px 0 4px; }
+  h4 { font-family: 'Space Grotesk'; font-size: 14px; font-weight: 600; letter-spacing: -0.005em; margin: 16px 0 4px; }
+  p, li { font-size: 14px; line-height: 1.6; color: var(--nm-text); }
+  p { margin: 8px 0; }
+  ul, ol { margin: 6px 0 12px; padding-left: 20px; }
+  li { margin: 3px 0; }
+  strong, b { font-weight: 600; color: var(--nm-text); }
+  code, kbd { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; background: var(--nm-panel-mono); padding: 1px 6px; border: 1px solid var(--nm-border); border-radius: 4px; color: var(--nm-text); }
+  a { color: var(--nm-accent-a); text-decoration: none; border-bottom: 1px dashed currentColor; }
+
+  /* Section dividers */
+  .sec { padding-top: 4px; }
+  .sec + .sec { border-top: 1px dashed var(--nm-border); margin-top: 28px; padding-top: 18px; }
+  .sec-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--nm-accent-a); letter-spacing: .14em; text-transform: uppercase; margin: 18px 0 2px; display: block; line-height: 1; }
+
+  /* TOC */
+  nav.toc { border: 1px solid var(--nm-border); border-radius: 14px; padding: 16px 22px; background: var(--nm-panel); margin: 0 0 28px; box-shadow: var(--nm-shadow-soft); }
+  nav.toc .label { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--nm-text-faint); text-transform: uppercase; letter-spacing: .14em; margin-bottom: 8px; }
+  nav.toc ol { columns: 3; column-gap: 28px; margin: 0; padding-left: 18px; }
+  nav.toc li { margin: 3px 0; font-size: 13px; line-height: 1.45; break-inside: avoid; }
+  nav.toc a { border: 0; color: var(--nm-text); }
+  nav.toc a:hover { color: var(--nm-accent-a); }
+  nav.toc .num { font-family: 'IBM Plex Mono', monospace; color: var(--nm-text-faint); margin-right: 6px; font-size: 11px; }
+  nav.toc .part {
+    grid-column: 1 / -1; column-span: all;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
+    color: var(--nm-accent-a); text-transform: uppercase; letter-spacing: .14em;
+    list-style: none; margin: 10px 0 4px; padding-left: 0;
+  }
+  nav.toc ol > li.part:first-child { margin-top: 0; }
+
+  /* Figures — vector-sharp live iframes of the actual React artboards */
+  figure {
+    margin: 14px 0;
+  }
+  figure figcaption {
+    padding: 10px 16px;
+    border: 1px solid var(--nm-border);
+    border-top: 0;
+    border-radius: 0 0 14px 14px;
+    background: var(--nm-panel-subtle);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--nm-text-faint);
+    display: flex; gap: 10px; align-items: center;
+  }
+  figure figcaption b { color: var(--nm-text-dim); font-weight: 600; }
+
+  /* Live iframe wrapper. Inner iframe renders the artboard at its NATIVE pixel
+     size; the wrapper CSS-scales it down. Text inside stays vector-crisp at any
+     zoom level. */
+  .iframe-frame {
+    --frame-w: 1440;
+    --frame-h: 900;
+    --display-w: 880;
+    width: calc(var(--display-w) * 1px);
+    height: calc(var(--display-w) * (var(--frame-h) / var(--frame-w)) * 1px);
+    max-width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--nm-border);
+    border-radius: 14px 14px 0 0;
+    background: var(--nm-panel);
+    box-shadow: var(--nm-shadow-soft);
+    position: relative;
+  }
+  /* When a frame is followed by a figcaption, drop the bottom radius. When
+     standalone, restore it. */
+  figure:not(:has(figcaption)) .iframe-frame { border-radius: 14px; }
+  .iframe-frame iframe {
+    display: block;
+    border: 0;
+    width: calc(var(--frame-w) * 1px);
+    height: calc(var(--frame-h) * 1px);
+    transform-origin: 0 0;
+    transform: scale(calc(var(--display-w) / var(--frame-w)));
+    background: transparent;
+  }
+  /* Pair of frames side by side */
+  .iframe-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .iframe-pair > div { display: flex; flex-direction: column; }
+  .iframe-pair .iframe-frame { --display-w: 430; }
+  .iframe-pair .tag {
+    padding: 8px 14px;
+    border: 1px solid var(--nm-border); border-top: 0;
+    border-radius: 0 0 14px 14px;
+    background: var(--nm-panel-subtle);
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: .14em;
+    color: var(--nm-text-faint);
+  }
+
+  /* Steps */
+  ol.steps { padding-left: 0; list-style: none; counter-reset: stepc; margin: 10px 0; }
+  ol.steps > li { counter-increment: stepc; position: relative; padding: 3px 0 3px 34px; margin: 4px 0; min-height: 22px; }
+  ol.steps > li::before {
+    content: counter(stepc);
+    position: absolute; left: 0; top: 4px;
+    width: 22px; height: 22px;
+    background: var(--nm-accent-a); color: #fff8ec;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: 'Space Grotesk'; font-weight: 700; font-size: 11px;
+  }
+  ol.steps li ul { margin: 4px 0 2px; padding-left: 16px; }
+  ol.steps li ul li { font-size: 13px; color: var(--nm-text-dim); margin: 2px 0; }
+
+  /* Callout */
+  .callout {
+    border-left: 3px solid var(--nm-accent-b);
+    background: var(--nm-accent-b-tint);
+    padding: 10px 14px; border-radius: 0 8px 8px 0;
+    margin: 12px 0; font-size: 13px; color: var(--nm-text);
+  }
+  .callout--a { border-color: var(--nm-accent-a); background: var(--nm-accent-a-tint); }
+  .callout--warn { border-color: var(--nm-warn); background: color-mix(in srgb, var(--nm-warn) 12%, transparent); }
+  .callout b.callout-label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: .14em;
+    color: inherit; margin-bottom: 3px; font-weight: 700;
+  }
+  .callout p { margin: 3px 0; }
+
+  /* Pill (inline label) */
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 1px 8px; border-radius: 999px;
+    border: 1px solid var(--nm-border-strong);
+    background: var(--nm-panel-strong);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--nm-text);
+    line-height: 1.5; vertical-align: 0.06em;
+  }
+  .pill--a { border-color: color-mix(in srgb, var(--nm-accent-a) 45%, transparent); background: var(--nm-accent-a-tint); color: var(--nm-accent-a); }
+  .pill--b { border-color: color-mix(in srgb, var(--nm-accent-b) 45%, transparent); background: var(--nm-accent-b-tint); color: var(--nm-accent-b); }
+  .pill--warn { border-color: color-mix(in srgb, var(--nm-warn) 45%, transparent); background: color-mix(in srgb, var(--nm-warn) 12%, transparent); color: var(--nm-warn); }
+
+  /* Glossary cards */
+  .glossary { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; margin: 10px 0; }
+  .glossary div {
+    border: 1px solid var(--nm-border); border-radius: 10px;
+    background: var(--nm-panel); padding: 10px 12px;
+  }
+  .glossary div b {
+    display: block;
+    font-family: 'Space Grotesk'; font-weight: 700;
+    font-size: 14px; letter-spacing: -0.01em;
+    margin-bottom: 2px; color: var(--nm-text);
+  }
+  .glossary div span { font-size: 12.5px; color: var(--nm-text-dim); line-height: 1.5; }
+
+  /* Schematic (small) */
+  .schematic {
+    border: 1px solid var(--nm-border); border-radius: 12px;
+    background: var(--nm-panel); padding: 16px;
+    box-shadow: var(--nm-shadow-soft);
+    margin: 18px 0;
+  }
+  .schematic .caption {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--nm-text-faint); margin-bottom: 10px;
+  }
+  .skel { display: flex; gap: 6px; align-items: stretch; min-height: 44px; }
+  .skel--col { flex-direction: column; }
+  .skel .box {
+    border: 1px dashed var(--nm-border-strong);
+    border-radius: 7px; padding: 10px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--nm-text-dim);
+    background: var(--nm-panel-mono);
+    flex: 1; min-height: 36px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .skel .box--solid { background: var(--nm-panel-strong); border-style: solid; border-color: var(--nm-border); color: var(--nm-text); }
+  .skel .box--a { border-color: color-mix(in srgb, var(--nm-accent-a) 45%, transparent); background: var(--nm-accent-a-tint); color: var(--nm-accent-a); }
+  .skel .box--b { border-color: color-mix(in srgb, var(--nm-accent-b) 45%, transparent); background: var(--nm-accent-b-tint); color: var(--nm-accent-b); }
+
+  /* Tables */
+  table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; margin: 10px 0; font-size: 13px; border: 1px solid var(--nm-border); border-radius: 10px; overflow: hidden; }
+  table.tbl th, table.tbl td { text-align: left; padding: 7px 11px; border-bottom: 1px solid var(--nm-border); vertical-align: top; line-height: 1.45; }
+  table.tbl tr:last-child td { border-bottom: 0; }
+  table.tbl thead th { background: var(--nm-panel-strong); font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--nm-text-faint); font-weight: 600; }
+
+  /* FAQ */
+  details.faq {
+    border: 1px solid var(--nm-border); border-radius: 10px;
+    background: var(--nm-panel); margin: 8px 0;
+    overflow: hidden;
+  }
+  details.faq[open] { box-shadow: var(--nm-shadow-soft); }
+  details.faq > summary {
+    list-style: none;
+    padding: 12px 16px;
+    cursor: pointer; user-select: none;
+    font-weight: 600; font-size: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  details.faq > summary::-webkit-details-marker { display: none; }
+  details.faq > summary::before {
+    content: '+'; font-family: 'IBM Plex Mono', monospace;
+    color: var(--nm-accent-a); font-weight: 700; font-size: 14px;
+  }
+  details.faq[open] > summary::before { content: '−'; }
+  details.faq > div.body {
+    padding: 0 16px 14px 38px;
+    font-size: 13.5px; color: var(--nm-text-dim); line-height: 1.65;
+  }
+  details.faq > div.body p { margin: 6px 0; }
+
+  /* Part label */
+  .part-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--nm-accent-a);
+    text-transform: uppercase; letter-spacing: .18em;
+    margin: 36px 0 -14px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .part-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--nm-border);
+  }
+
+  /* Panel reference (§08 editor): figure left, description right.
+     Auto-fits each row to the figure's intrinsic display width. */
+  .panel-ref {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    gap: 14px 22px;
+    align-items: start;
+    margin: 14px 0 20px;
+  }
+  .panel-ref h4 { grid-column: 1 / -1; margin: 0; }
+  .panel-ref figure { margin: 0; }
+  .panel-ref .panel-ref-body { min-width: 0; }
+  .panel-ref .panel-ref-body > :first-child { margin-top: 0; }
+  .panel-ref .panel-ref-body > :last-child { margin-bottom: 0; }
+
+  /* Wide variant: figure on top full-width, body below as horizontal 2-col */
+  .panel-ref--wide { grid-template-columns: 1fr; }
+  .panel-ref--wide figure { grid-column: 1 / -1; }
+  .panel-ref--wide .panel-ref-body {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    gap: 22px;
+    align-items: start;
+  }
+  .panel-ref--wide .panel-ref-body > ul,
+  .panel-ref--wide .panel-ref-body > ol { margin-top: 0; }
+  @media (max-width: 760px) {
+    .panel-ref--wide .panel-ref-body { grid-template-columns: 1fr; }
+  }
+
+  /* Stacked variant: figure on top, body below — meant for use inside .panel-pair */
+  .panel-ref--stacked { grid-template-columns: 1fr; }
+  .panel-ref--stacked figure { grid-column: 1; max-width: 100%; }
+  .panel-ref--stacked figure .iframe-frame {
+    width: 100% !important;
+    --display-w: 100% !important;
+  }
+  .panel-ref--stacked .panel-ref-body { grid-column: 1; }
+
+  /* Annotated panel-refs — callouts connected to figure regions by arrows */
+  /* Shell variant: callouts on the LEFT, figure on the RIGHT (arrows point right) */
+  .panel-ref--shell { grid-template-columns: 1fr; }
+  .panel-ref--shell .annot-row {
+    display: grid;
+    grid-template-columns: 1fr 130px var(--fig-w, 720px);
+    gap: 0;
+    align-items: start;
+    position: relative;
+  }
+  .panel-ref--shell .annot-fig--shell { grid-column: 3; }
+  .panel-ref--shell .annot-fig--shell figure { margin: 0; }
+  .panel-ref--shell .annot-fig--shell .iframe-frame { --display-w: 720; }
+  .panel-ref--shell .annot-side--left {
+    grid-column: 1;
+    position: relative;
+    min-height: 540px;
+  }
+  .panel-ref--shell .annot-side--left .annot-callout {
+    position: absolute;
+    top: var(--y, 0);
+    left: 0; right: 0;
+    transform: translateY(-50%);
+    padding: 7px 11px 7px 30px;
+    border: 1px solid var(--nm-border);
+    border-radius: 8px;
+    background: var(--nm-panel-strong);
+    font-size: 12.5px;
+    line-height: 1.45;
+    box-shadow: var(--nm-shadow-soft);
+  }
+  .panel-ref--shell .annot-side--left .annot-callout::before {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    width: 120px;
+    border-top: 1.5px dashed var(--nm-accent-a);
+    transform: translateY(-0.5px);
+  }
+  .panel-ref--shell .annot-side--left .annot-callout::after {
+    content: '';
+    position: absolute;
+    left: calc(100% + 120px - 5px);
+    top: 50%;
+    width: 0; height: 0;
+    border: 5px solid transparent;
+    border-left: 7px solid var(--nm-accent-a);
+    transform: translateY(-50%);
+  }
+  @media (max-width: 760px), print {
+    .panel-ref--shell .annot-row { display: block; }
+    .panel-ref--shell .annot-side--left {
+      position: static;
+      min-height: 0;
+      margin-top: 12px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .panel-ref--shell .annot-side--left .annot-callout {
+      position: static; transform: none;
+    }
+    .panel-ref--shell .annot-side--left .annot-callout::before,
+    .panel-ref--shell .annot-side--left .annot-callout::after { display: none; }
+  }
+
+  .panel-ref--annot { grid-template-columns: 1fr; }
+  .panel-ref--annot h4 { margin-bottom: 6px; }
+
+  /* Vertical layout: figure on left, callouts stacked on right */
+  .panel-ref--annot-v .annot-row {
+    display: grid;
+    grid-template-columns: var(--fig-w, 260px) 120px 1fr;
+    gap: 0;
+    align-items: start;
+    position: relative;
+  }
+  .panel-ref--annot-v .annot-fig { grid-column: 1; }
+  .panel-ref--annot-v .annot-fig figure { margin: 0; }
+  .panel-ref--annot-v .annot-side {
+    grid-column: 3;
+    position: relative;
+    min-height: var(--fig-h, 520px);
+  }
+  .panel-ref--annot-v .annot-callout {
+    position: absolute;
+    top: var(--y, 0);
+    left: 0; right: 0;
+    transform: translateY(-50%);
+    padding: 7px 11px 7px 30px;
+    border: 1px solid var(--nm-border);
+    border-radius: 8px;
+    background: var(--nm-panel-strong);
+    font-size: 12.5px;
+    line-height: 1.45;
+    box-shadow: var(--nm-shadow-soft);
+  }
+  .panel-ref--annot-v .annot-callout::before {
+    /* Horizontal dashed connector going left into the gap */
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    width: 110px;
+    border-top: 1.5px dashed var(--nm-accent-a);
+    transform: translateY(-0.5px);
+  }
+  .panel-ref--annot-v .annot-callout::after {
+    /* Arrow head at the left end of the connector */
+    content: '';
+    position: absolute;
+    right: calc(100% + 110px - 2px);
+    top: 50%;
+    width: 0; height: 0;
+    border: 5px solid transparent;
+    border-right: 7px solid var(--nm-accent-a);
+    transform: translateY(-50%);
+  }
+
+  /* Horizontal layout: figure on top, callouts in a row below with vertical lines pointing up */
+  .panel-ref--annot-h .annot-col {
+    display: flex; flex-direction: column;
+    gap: 36px;
+    margin-top: 6px;
+  }
+  .panel-ref--annot-h .annot-fig figure { margin: 0; }
+  .panel-ref--annot-h .annot-row-callouts {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .panel-ref--annot-h .annot-callout-h {
+    position: relative;
+    padding: 8px 11px 8px 30px;
+    border: 1px solid var(--nm-border);
+    border-radius: 8px;
+    background: var(--nm-panel-strong);
+    box-shadow: var(--nm-shadow-soft);
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+  .panel-ref--annot-h .annot-callout-h::before {
+    /* Vertical dashed connector going up into the gap above */
+    content: '';
+    position: absolute;
+    left: var(--x, 50%);
+    bottom: 100%;
+    height: 30px;
+    border-left: 1.5px dashed var(--nm-accent-a);
+  }
+  .panel-ref--annot-h .annot-callout-h::after {
+    /* Arrow head at the top end of the connector */
+    content: '';
+    position: absolute;
+    left: var(--x, 50%);
+    bottom: calc(100% + 30px - 2px);
+    width: 0; height: 0;
+    border: 5px solid transparent;
+    border-bottom: 7px solid var(--nm-accent-a);
+    transform: translateX(-50%);
+  }
+
+  /* Annotation number badge — rust circle */
+  .annot-num {
+    position: absolute;
+    left: 8px; top: 50%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px;
+    background: var(--nm-accent-a);
+    color: #fff8ec;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; font-size: 10.5px;
+  }
+  .panel-ref--annot-h .annot-num { top: 14px; transform: none; }
+
+  /* Print + small viewport fallback: drop annotations to a plain stacked list */
+  @media (max-width: 760px), print {
+    .panel-ref--annot-v .annot-row,
+    .panel-ref--annot-h .annot-col {
+      display: block;
+    }
+    .panel-ref--annot-v .annot-side {
+      position: static;
+      min-height: 0;
+      margin-top: 12px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .panel-ref--annot-v .annot-callout,
+    .panel-ref--annot-h .annot-callout-h {
+      position: static;
+      transform: none;
+    }
+    .panel-ref--annot-v .annot-callout::before,
+    .panel-ref--annot-v .annot-callout::after,
+    .panel-ref--annot-h .annot-callout-h::before,
+    .panel-ref--annot-h .annot-callout-h::after {
+      display: none;
+    }
+    .panel-ref--annot-h .annot-row-callouts {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Two panel-refs side by side */
+  .panel-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+    margin: 14px 0 20px;
+  }
+  @media (max-width: 760px) {
+    .panel-pair { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .panel-ref { grid-template-columns: 1fr; gap: 8px; }
+  }
+
+  /* Hero figures (full editor + mydata-files etc.) — keep tighter top margin */
+  figure { margin: 12px 0; }
+
+  /* Print */
+  @media print {
+    html, body { background: white; }
+    .doc { padding: 24px 32px; max-width: none; }
+    figure, nav.toc, .callout, .schematic, table.tbl, details.faq { box-shadow: none; break-inside: avoid; }
+    details.faq[open] > div.body, details.faq > summary { display: revert; }
+    details.faq { padding-bottom: 8px; }
+    h2, h3, h4, .part-label { break-after: avoid; }
+    a { color: inherit; }
+    figure img { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<main class="doc">
+
+  <!-- ─── Cover ─────────────────────────────────────────────────────── -->
+  <header class="cover">
+    <div class="eyebrow">WBCD 2026 · participant guide</div>
+    <h1>NM Data Platform<br/>User Guide</h1>
+    <p class="lead">
+      Everything you need to label your robot recordings, run edits, and ship a WBCD
+      submission. Friendly tour first, full reference after.
+    </p>
+    <p class="lead" style="margin-top:18px;">
+      <a href="#quickstart" style="display:inline-block;padding:10px 18px;border-radius:10px;background:var(--nm-accent-a);color:#fff8ec;border:0;font-weight:700;text-decoration:none;font-size:14px;">
+        New here? → Your first WBCD submission in 10 minutes
+      </a>
+    </p>
+    <div class="meta">
+      <span><b>For</b> · WBCD contestants</span>
+      <span><b>Quickstart</b> · 10 min</span>
+      <span><b>Full guide</b> · scan as needed</span>
+      <span><b>Print</b> · ⌘P → Save as PDF</span>
+    </div>
+  </header>
+
+  <!-- ─── TOC ───────────────────────────────────────────────────────── -->
+  <nav class="toc">
+    <div class="label">Contents</div>
+    <ol>
+      <li class="part">Start here</li>
+      <li><a href="#quickstart"><span class="num">Q</span>Your first WBCD submission</a></li>
+      <li><a href="#concepts"><span class="num">01</span>Catalog vs your project</a></li>
+
+      <li class="part">Day to day</li>
+      <li><a href="#landing"><span class="num">02</span>Sign in &amp; pick a project</a></li>
+      <li><a href="#shell"><span class="num">03</span>Workspace shell</a></li>
+      <li><a href="#explorer"><span class="num">05</span>Browse the catalog</a></li>
+      <li><a href="#select"><span class="num">06</span>Add data to your project</a></li>
+      <li><a href="#mydata"><span class="num">07</span>My Data · files, imports, exports, history</a></li>
+
+      <li class="part">The editor</li>
+      <li><a href="#editing"><span class="num">08</span>Editing — first edit + reference</a></li>
+
+      <li class="part">People &amp; admin</li>
+      <li><a href="#activity"><span class="num">09</span>Activity stream</a></li>
+      <li><a href="#settings"><span class="num">11</span>Settings</a></li>
+
+      <li class="part">Reference</li>
+      <li><a href="#shortcuts"><span class="num">12</span>Shortcuts</a></li>
+      <li><a href="#faq"><span class="num">13</span>FAQ</a></li>
+      <li><a href="#help"><span class="num">14</span>Getting help</a></li>
+    </ol>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       Start here
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="part-label">Start here</div>
+
+  <!-- ─── Q · Quickstart ──────────────────────────────────────────── -->
+  <section class="sec" id="quickstart">
+    <div class="sec-num">Q</div>
+    <h2>Your first WBCD submission</h2>
+
+    <p>
+      Goal of this section: get one labeled episode out the door, end-to-end, in about ten
+      minutes. The deep references are below if you need them, but you don't need them yet.
+    </p>
+
+    <ol class="steps">
+      <li>
+        <b>Sign in.</b> You land on the project picker.
+      </li>
+      <li>
+        <b>Create your team's project.</b> Click <span class="pill pill--a">+ New project</span>,
+        name it something like <code>wbcd-2026-team-xyz</code>. You'll drop into the empty
+        workspace.
+      </li>
+      <li>
+        <b>Pull in starter data.</b> Sidebar → <i>My Data</i> → <i>Imports</i> tab. Pick a
+        source (SFTP for contest-provided data, Hugging Face for public reference sets, file
+        upload for your own HDF5). The job lands in the folder you've selected on the left.
+      </li>
+      <li>
+        <b>Open one episode.</b> Switch to the <i>Files</i> tab. Double-click any episode row
+        to jump into the editor.
+      </li>
+      <li>
+        <b>Mark a sub-goal segment.</b> Scrub the timeline to the start of a phase (e.g. the
+        moment the gripper closes). Press <kbd>R</kbd> to switch to the tag tool. Click the
+        timeline at the start, then click again at the end. A coloured span appears.
+      </li>
+      <li>
+        <b>Name it.</b> The right panel opens to <i>Sub-goal segments</i>. Fill in the
+        <i>Sub-goal</i> name ("Grasp Cube") and the <i>Language instruction</i> ("Close the
+        gripper around the cube and lift to 12cm").
+      </li>
+      <li>
+        <b>Save your edit.</b> Top right of the editor → <i>Save edit</i>. Now you have a saved
+        version of this episode with your sub-goal segment attached.
+      </li>
+      <li>
+        <b>Repeat for the rest of the phases.</b> Keep adding segments and saving. Three to six
+        segments per episode is typical.
+      </li>
+      <li>
+        <b>Export the LeRobot bundle.</b> Back in <i>My Data</i> → <i>Exports</i> tab. Pick the
+        <b>LeRobot</b> format tile, name your version, hit <i>Queue export</i>.
+      </li>
+      <li>
+        <b>Submit.</b> When the export row finishes (status pill turns ready), download the
+        file and upload it through the WBCD submission portal.
+      </li>
+    </ol>
+
+    <div class="callout callout--a">
+      <b class="callout-label">If you only read one more section</b>
+      <p>
+        Read <a href="#editing">§08 · Editing</a>. That's where the bulk of your time goes.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── 01 · Catalog vs project ─────────────────────────────────── -->
+  <section class="sec" id="concepts">
+    <div class="sec-num">01</div>
+    <h2>Catalog vs your project</h2>
+
+    <p>
+      The single mental model you need:
+    </p>
+
+    <div class="glossary">
+      <div>
+        <b>Catalog</b>
+        <span>A shared library of robot-learning datasets — public LeRobot sets, vendor-shipped
+        sets, and anything your workspace uploaded. Read-only browsing. Lives in the
+        <i>Dataset Explorer</i> sidebar item.</span>
+      </div>
+      <div>
+        <b>Your project</b>
+        <span>Your own bookshelf. Only the data you've explicitly pulled in. Where you edit,
+        label, and export from. Lives in the <i>My Data</i> sidebar item.</span>
+      </div>
+    </div>
+
+    <p>
+      Browsing the catalog doesn't put anything in your project. You add data with the
+      <i>Add to project</i> action — see <a href="#select">§06</a>.
+    </p>
+
+    <p>
+      An <b>episode</b> is one recorded trial (frames, cameras, robot states). A <b>dataset</b>
+      is a collection of episodes from one source. <b>Folders</b> are how you organise things
+      inside your project. That's the whole vocabulary.
+    </p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       Day to day
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="part-label">Day to day</div>
+
+  <!-- ─── 02 · Landing ─────────────────────────────────────────────── -->
+  <section class="sec" id="landing">
+    <div class="sec-num">02</div>
+    <h2>Sign in &amp; pick a project</h2>
+
+    <p>
+      After sign-in you land on the project picker. You can't enter the app until you pick or
+      create a project — everything that follows is scoped to one.
+    </p>
+
+    <figure>
+      <div class="iframe-frame" style="--frame-w:1440;--frame-h:900;">
+        <iframe src="capture.html#landing" loading="lazy" title="Landing"></iframe>
+      </div>
+      <figcaption><b>Landing</b> · pinned + recent + new project tile</figcaption>
+    </figure>
+
+    <ul>
+      <li><b>Pinned</b> — projects you've touched in the last week. Click a card to open it as a new tab.</li>
+      <li><b>+ New project</b> — for a fresh competition project, name it then drop into the empty workspace.</li>
+      <li><b>Recent</b> — anything else you've opened in the last 30 days, including archived.</li>
+    </ul>
+  </section>
+
+  <!-- ─── 03 · Workspace shell ─────────────────────────────────────── -->
+  <section class="sec" id="shell">
+    <div class="sec-num">03</div>
+    <h2>Workspace shell</h2>
+
+    <p>
+      Projects open as tabs across the top. Work like browser tabs. Click to switch, ✕ to
+      close (the project isn't deleted — it just moves to <i>Recent projects ⌄</i>). The
+      topbar shows the breadcrumb of where you are, plus global tools: <kbd>⌘K</kbd> search,
+      theme toggle, and notifications.
+    </p>
+
+    <div class="panel-ref panel-ref--annot panel-ref--shell">
+      <div class="annot-row">
+        <div class="annot-side annot-side--left">
+          <div class="annot-callout" style="--y:108px;">
+            <span class="annot-num">1</span>
+            <b>Dataset Explorer</b> — browse the shared catalog of robot-learning datasets.
+          </div>
+          <div class="annot-callout" style="--y:158px;">
+            <span class="annot-num">2</span>
+            <b>My Data</b> — your project's files, imports, exports, history.
+          </div>
+          <div class="annot-callout" style="--y:208px;">
+            <span class="annot-num">3</span>
+            <b>Editing</b> — the annotation editor. Badge counts running jobs.
+          </div>
+          <div class="annot-callout" style="--y:258px;">
+            <span class="annot-num">4</span>
+            <b>Activity</b> — events across all your projects.
+          </div>
+          <div class="annot-callout" style="--y:308px;">
+            <span class="annot-num">5</span>
+            <b>Project members</b> — invite teammates, set roles.
+          </div>
+          <div class="annot-callout" style="--y:480px;">
+            <span class="annot-num">6</span>
+            <b>Settings + Help</b> — utility row next to your avatar.
+          </div>
+        </div>
+        <div class="annot-fig annot-fig--shell">
+          <figure>
+            <div class="iframe-frame" style="--frame-w:1440;--frame-h:900;">
+              <iframe src="capture.html#shell" loading="lazy" title="Workspace shell"></iframe>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 05 · Explorer ────────────────────────────────────────────── -->
+  <section class="sec" id="explorer">
+    <div class="sec-num">05</div>
+    <h2>Browse the catalog</h2>
+
+    <p>
+      <i>Dataset Explorer</i> is the shared library. Datasets are grouped by vendor. Search by
+      title, provider, or tag.
+    </p>
+
+    <figure>
+      <div class="iframe-frame" style="--frame-w:1440;--frame-h:960;">
+        <iframe src="capture.html#explorer" loading="lazy" title="Dataset Explorer"></iframe>
+      </div>
+      <figcaption><b>Dataset Explorer</b> · catalog left, episode inspector right</figcaption>
+    </figure>
+
+    <ul>
+      <li>Click a card to open the dataset. Its episodes appear in the right inspector.</li>
+      <li>Click any episode row to scrub through it. Double-click to open in the editor.</li>
+      <li>Use the tag icon on a card to pin a dataset to the top of the catalog.</li>
+    </ul>
+  </section>
+
+  <!-- ─── 06 · Add to project ──────────────────────────────────────── -->
+  <section class="sec" id="select">
+    <div class="sec-num">06</div>
+    <h2>Add data to your project</h2>
+
+    <p>
+      Hover over a dataset card and tick the checkbox. To pick specific episodes, open a
+      dataset and tick the checkboxes on individual episode rows. You can mix both kinds of
+      selection.
+    </p>
+
+    <p>
+      When you have one or more items selected, a toolbar appears at the bottom of the screen.
+      Click <span class="pill pill--a">⌄ Add to project</span>, pick a folder, hit
+      <span class="pill pill--a">Add</span>. The items show up in <i>My Data</i> immediately.
+    </p>
+
+    <figure>
+      <div class="iframe-frame" style="--frame-w:720;--frame-h:620;--display-w:600;">
+        <iframe src="capture.html#add" loading="lazy" title="Add to project popover"></iframe>
+      </div>
+      <figcaption><b>Add to project</b> · project picker · folder picker · confirm</figcaption>
+    </figure>
+
+    <p>
+      Items already in the destination folder are skipped, not duplicated. You'll see a count
+      of skipped duplicates in the success toast.
+    </p>
+  </section>
+
+  <!-- ─── 07 · My Data ─────────────────────────────────────────────── -->
+  <section class="sec" id="mydata">
+    <div class="sec-num">07</div>
+    <h2>My Data — files, imports, exports, history</h2>
+
+    <p>
+      <i>My Data</i> is everything in your project plus everything flowing in and out of it.
+      Folder tree on the left, a four-tab strip on the right: <b>Files</b> (default) ·
+      <b>Imports</b> · <b>Exports</b> · <b>History</b>.
+    </p>
+
+    <figure>
+      <div class="iframe-frame" style="--frame-w:1440;--frame-h:900;">
+        <iframe src="capture.html#mydata-files" loading="lazy" title="My Data — Files"></iframe>
+      </div>
+      <figcaption><b>Files</b> · the default tab</figcaption>
+    </figure>
+
+    <h3 id="mydata-files">Files tab</h3>
+    <p>
+      Contents of the selected folder, in three sections: sub-folders, datasets, and individual
+      episodes. Double-click any episode row to open the editor. Single-click to select for
+      bulk actions (move, flag, favorite, remove).
+    </p>
+    <p>
+      <span class="pill pill--a">+ New folder</span> adds a folder; right-click any folder row
+      to rename / move / delete. <i>Quick filters</i> below the tree are saved views — Flagged,
+      Favorited, Recently added — they show matching items wherever they live.
+    </p>
+
+    <h3 id="mydata-imports">Imports tab</h3>
+    <figure>
+      <div class="iframe-frame" style="--frame-w:1440;--frame-h:900;">
+        <iframe src="capture.html#mydata-imports" loading="lazy" title="My Data — Imports"></iframe>
+      </div>
+      <figcaption><b>Imports</b> · source tiles + job queue</figcaption>
+    </figure>
+    <p>
+      Pick a source at the top, watch jobs run at the bottom. Imports land in whichever folder
+      is selected in the tree.
+    </p>
+    <table class="tbl">
+      <thead><tr><th>Source</th><th>For</th></tr></thead>
+      <tbody>
+        <tr><td><b>Upload file</b></td><td>Drag-and-drop HDF5 / tar / parquet from your laptop. Up to 12 GB per file.</td></tr>
+        <tr><td><b>S3 prefix</b></td><td><code>s3://bucket/prefix/</code>. Your S3 bucket needs to grant read access to NM's importer — see the S3 setup guide for the exact policy text.</td></tr>
+        <tr><td><b>Hugging Face</b></td><td>Pull a public LeRobot dataset by repo id.</td></tr>
+        <tr><td><b>SFTP server</b></td><td>For contest-provided data. Uses SSH keys (we'll give you our public key during setup).</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Every import passes through five stages: <code>download → extract → index file →
+      preview thumbnails → make searchable</code>. Failed jobs stay in the queue; the row's
+      ⋯ menu has <i>Retry</i> with the original settings pre-filled.
+    </p>
+
+    <h3 id="mydata-exports">Exports tab</h3>
+    <figure>
+      <div class="iframe-frame" style="--frame-w:1440;--frame-h:900;">
+        <iframe src="capture.html#mydata-exports" loading="lazy" title="My Data — Exports"></iframe>
+      </div>
+      <figcaption><b>Exports</b> · format tiles + your shipped versions</figcaption>
+    </figure>
+    <p>
+      Pick an output format, name the version, hit <i>Queue export</i>. Each export shows up as
+      one row. The row holds one or more downloadable files — if you exported the same data
+      in two formats, you'll see one row with two files inside, not two separate rows. Click a
+      row to download, re-run, or add another format.
+    </p>
+    <table class="tbl">
+      <thead><tr><th>Format</th><th>For</th></tr></thead>
+      <tbody>
+        <tr><td><b>LeRobot</b></td><td>Full re-export in the lerobot dataset format. <b>This is what WBCD submissions use.</b></td></tr>
+        <tr><td><b>Annotation JSONL</b></td><td>Just the labels. Fast. Good for sharing annotations with teammates.</td></tr>
+        <tr><td><b>Snapshot</b></td><td>Verbatim copy of the folder. No edits applied.</td></tr>
+        <tr><td><b>Recipe</b></td><td>A saved chain of edits — re-applies the same transforms when you export.</td></tr>
+      </tbody>
+    </table>
+
+      </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       The editor
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="part-label">The editor</div>
+
+  <!-- ─── 08 · Editing ─────────────────────────────────────────────── -->
+  <section class="sec" id="editing">
+    <div class="sec-num">08</div>
+    <h2>Editing — first edit, then reference</h2>
+
+    <p>
+      Where you'll spend most of your time. The editor is for labeling episodes —
+      keyframes, sub-goal segments, trim windows, 2D bounding boxes. Every save creates a new
+      version of the episode; your raw recording is never modified.
+    </p>
+
+    <figure>
+      <div class="iframe-frame" style="--frame-w:1440;--frame-h:960;">
+        <iframe src="capture.html#editing" loading="lazy" title="Editor"></iframe>
+      </div>
+      <figcaption><b>Editor</b> · entity tree · viewports · right panel · timeline</figcaption>
+    </figure>
+
+    <h3 id="editing-types">The four annotation types</h3>
+    <p>
+      Before any panels: the four kinds of label you can add. Most contestants will use
+      sub-goal segments heavily, keyframes occasionally, the others rarely.
+    </p>
+    <table class="tbl">
+      <thead>
+        <tr><th>Type</th><th>One-line def</th><th>When to use</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Keyframe</b> <span style="display:inline-block;width:10px;height:10px;background:var(--nm-accent-a);transform:rotate(45deg);margin-left:4px;"></span></td>
+          <td>One moment. A pose snapshot at frame N.</td>
+          <td>Marking the exact frame the gripper closes or releases.</td>
+        </tr>
+        <tr>
+          <td><b>Tag</b> <span class="pill pill--a">[start..end]</span></td>
+          <td>A frame range with a label. Drawn as a coloured span on the timeline.</td>
+          <td>Marking a phase of the trial.</td>
+        </tr>
+        <tr>
+          <td><b>Sub-goal segment</b></td>
+          <td>A tag plus a language instruction and a review status.</td>
+          <td><b>The main thing you'll do for WBCD.</b> One per sub-goal phase per episode.</td>
+        </tr>
+        <tr>
+          <td><b>2D bounding box</b></td>
+          <td>A labeled rectangle drawn on a camera frame. Tracks across frames.</td>
+          <td>Marking objects (the cube, the bin) for downstream training.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="editing-first">Your first edit (5 minutes)</h3>
+    <ol class="steps">
+      <li>
+        <b>Open an episode.</b> From <i>My Data → Files</i>, double-click any row.
+      </li>
+      <li>
+        <b>Scrub.</b> The wide black area is the viewport. Click anywhere on the timeline at
+        the bottom to jump to that moment. <kbd>Space</kbd> plays / pauses; <kbd>J</kbd> and
+        <kbd>L</kbd> step one frame at a time.
+      </li>
+      <li>
+        <b>Add a sub-goal segment.</b> Press <kbd>R</kbd> to pick the tag tool. Click the
+        timeline where the phase starts, then again where it ends. A coloured span appears.
+      </li>
+      <li>
+        <b>Fill in the label.</b> The right panel jumps to <i>Sub-goal segments</i>. Type the
+        sub-goal name and a language instruction.
+      </li>
+      <li>
+        <b>Mark its review status.</b> <span class="pill">draft</span> while you're working,
+        <span class="pill pill--b">reviewed</span> when you're done.
+      </li>
+      <li>
+        <b>Save.</b> Top right → <i>Save edit · v…</i>. You've shipped a version. Next episode:
+        <kbd>N</kbd>.
+      </li>
+    </ol>
+
+    <h3>Five tools</h3>
+    <table class="tbl">
+      <thead><tr><th>Tool</th><th>Key</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td><b>Select</b></td><td><kbd>V</kbd></td><td>The default. Pick and drag annotations.</td></tr>
+        <tr><td><b>Keyframe</b></td><td><kbd>K</kbd></td><td>Click the timeline to drop a diamond at that frame. <kbd>Shift</kbd>+<kbd>K</kbd> adds at the current position from any tool.</td></tr>
+        <tr><td><b>Tag</b></td><td><kbd>R</kbd></td><td>Click-drag to draw a frame range. Becomes a sub-goal segment.</td></tr>
+        <tr><td><b>Trim</b></td><td><kbd>T</kbd></td><td>Drag the in/out handles on the timeline to crop the episode for export.</td></tr>
+        <tr><td><b>Locate</b></td><td><kbd>L</kbd></td><td>Type a frame or timecode to jump there.</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="editing-versions">Versions</h3>
+    <p>
+      Click <i>Save edit</i> and the platform stores a new version with your name and the
+      time. Each version remembers what changed since the last save. Open the version dropdown
+      (top-right of the editor) to roll back to any earlier save. <b>Your raw recording is
+      never modified.</b>
+    </p>
+    <p>
+      Two kinds of things appear in the version dropdown:
+    </p>
+    <ul>
+      <li><b>Versions of this episode</b> you've saved.</li>
+      <li><b>Workspace annotation sets</b> — re-usable labeling patterns. If you labeled the
+        same five sub-goals on 20 pick-and-place episodes, save them as an annotation set and
+        apply it to new episodes in one click.</li>
+    </ul>
+
+    <h3 id="editing-reference">Panel reference</h3>
+
+    <div class="panel-ref panel-ref--annot panel-ref--annot-v">
+  <h4>Entity tree (left)</h4>
+  <div class="annot-row">
+    <div class="annot-fig" style="--fig-w:260px;--fig-h:520px;">
+      <figure>
+        <div class="iframe-frame" style="--frame-w:260;--frame-h:520;--display-w:260;">
+          <iframe src="capture.html#editing-tree" loading="lazy" title="Entity tree"></iframe>
+        </div>
+        <figcaption><b>Entity tree</b> · everything in the recording</figcaption>
+      </figure>
+    </div>
+    <div class="annot-side">
+      <div class="annot-callout" style="--y:50px;">
+        <span class="annot-num">1</span>
+        <b>Filter input</b> at the top is live.
+      </div>
+      <div class="annot-callout" style="--y:170px;">
+        <span class="annot-num">2</span>
+        <b>Lists everything</b> in the recording — robot body, cameras, joint angles, action commands.
+      </div>
+      <div class="annot-callout" style="--y:300px;">
+        <span class="annot-num">3</span>
+        Click any <b>group</b> to collapse it.
+      </div>
+      <div class="annot-callout" style="--y:430px;">
+        <span class="annot-num">4</span>
+        Click a <b>camera entity</b> to add it as a tile in the viewports.
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="panel-ref panel-ref--annot panel-ref--annot-h">
+  <h4>Viewport toolbar (top)</h4>
+  <div class="annot-col">
+    <div class="annot-fig" style="--fig-w:880px;">
+      <figure>
+        <div class="iframe-frame" style="--frame-w:1080;--frame-h:80;--display-w:880;">
+          <iframe src="capture.html#editing-toolbar" loading="lazy" title="Viewport toolbar"></iframe>
+        </div>
+        <figcaption><b>Toolbar</b> · tools · time readout · version dropdown · save</figcaption>
+      </figure>
+    </div>
+    <div class="annot-row-callouts">
+      <div class="annot-callout-h" style="--x:8%;">
+        <span class="annot-num">1</span>
+        <div><b>Five tools</b> on the left — Select V · Keyframe K · Tag R · Trim T · Locate L.</div>
+      </div>
+      <div class="annot-callout-h" style="--x:38%;">
+        <span class="annot-num">2</span>
+        <div><b>Live time + frame</b> readout at the playhead.</div>
+      </div>
+      <div class="annot-callout-h" style="--x:72%;">
+        <span class="annot-num">3</span>
+        <div><b>Version dropdown</b> — pick or load any earlier save.</div>
+      </div>
+      <div class="annot-callout-h" style="--x:93%;">
+        <span class="annot-num">4</span>
+        <div><b>Save edit</b> — white dot means unsaved changes.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="panel-ref">
+  <h4>Viewport grid (centre)</h4>
+  <figure>
+      <div class="iframe-frame" style="--frame-w:920;--frame-h:500;--display-w:880;">
+        <iframe src="capture.html#editing-viewports" loading="lazy" title="Viewport grid"></iframe>
+      </div>
+      <figcaption><b>Viewports</b> · 3D simulator + camera tiles</figcaption>
+    </figure>
+  <div class="panel-ref-body">
+    <p>
+      The 3D simulator tile shows the robot in motion (or a stylised preview for unsupported
+      embodiments). Add or remove camera tiles by clicking image entities in the tree.
+      Bounding boxes draw directly on camera frames. Up to six cameras + the 3D tile.
+    </p>
+  </div>
+</div>
+
+  <div class="panel-pair">
+  <div class="panel-ref panel-ref--stacked">
+  <h4>Sub-goal segments tab (right)</h4>
+  <figure>
+      <div class="iframe-frame" style="--frame-w:360;--frame-h:620;--display-w:340;">
+        <iframe src="capture.html#editing-segments" loading="lazy" title="Sub-goal segments"></iframe>
+      </div>
+      <figcaption><b>Sub-goal segments</b> · card strip + active segment editor</figcaption>
+    </figure>
+  <div class="panel-ref-body">
+    <p>
+      Default right-panel tab. Card for each sub-goal segment with its label, sub-goal name,
+      and review status. Click a card to edit it below — segment name, sub-goal name, language
+      instruction, free-form note, status. <i>+ Segment</i> creates a new one at the current
+      time.
+    </p>
+  </div>
+</div>
+
+  <div class="panel-ref panel-ref--stacked">
+  <h4>Selection tab (right)</h4>
+  <figure>
+      <div class="iframe-frame" style="--frame-w:360;--frame-h:540;--display-w:340;">
+        <iframe src="capture.html#editing-selection" loading="lazy" title="Selection tab"></iframe>
+      </div>
+      <figcaption><b>Selection</b> · contextual editor</figcaption>
+    </figure>
+  <div class="panel-ref-body">
+    <p>
+      The Selection tab shows the editable properties of whatever you clicked. Picking a
+      keyframe shows its label, position, and a snapshot of the robot pose (gripper position,
+      end-effector x/y/z, joint angles). Picking a tag shows its label, colour, start/end, and
+      language instruction. Picking a bounding box shows its position and visibility range.
+    </p>
+  </div>
+</div>
+  </div>
+
+  <div class="panel-ref panel-ref--wide">
+  <h4>Timeline (bottom)</h4>
+  <figure>
+      <div class="iframe-frame" style="--frame-w:1200;--frame-h:320;--display-w:880;">
+        <iframe src="capture.html#editing-timeline" loading="lazy" title="Timeline"></iframe>
+      </div>
+      <figcaption><b>Timeline</b> · transport · regions · keyframes · channels</figcaption>
+    </figure>
+  <div class="panel-ref-body">
+    <p>
+      Track-label column on the left, the actual tracks on the right. The vertical line marking
+      your current position is draggable — drag it to scrub through time. Tracks top to bottom:
+    </p>
+    <ul>
+      <li><b>Ruler</b> — tick marks at each second.</li>
+      <li><b>Regions</b> — frame-range tags drawn as coloured spans. Click to select.</li>
+      <li><b>Keyframes</b> — diamond markers with their labels. Click to select.</li>
+      <li><b>Channels</b> — small line graphs showing how a value changes over time (joint angle, action command, etc). Rename in the gutter, delete with the trash icon on hover, add a new one with <span class="pill">+ Track</span>.</li>
+    </ul>
+  </div>
+</div>
+
+  <h3>Export your edits</h3>
+    <p>
+      Two paths:
+    </p>
+    <ul>
+      <li><b>Just this clip</b> — <i>Export clip</i> on the timeline transport. Ships one LeRobot bundle for this episode.</li>
+      <li><b>Whole folder</b> — back in <i>My Data → Exports</i> tab (see §07). For WBCD submissions you'll usually batch-export the whole folder.</li>
+    </ul>
+    <p>
+      Either way, your trim window applies automatically and closed camera tiles are dropped.
+    </p>
+
+    <div class="callout callout--warn">
+      <b class="callout-label">Concurrent edits</b>
+      <p>
+        Two people can't edit the same episode at once. The second editor sees a "someone else
+        is editing this" notice. Different episodes in the same dataset are fine in parallel.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       People & admin
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="part-label">People &amp; admin</div>
+
+  <!-- ─── 09 · Activity ────────────────────────────────────────────── -->
+  <section class="sec" id="activity">
+    <div class="sec-num">09</div>
+    <h2>Activity stream</h2>
+
+    <p>
+      <b>History tab</b> (inside My Data) = events in this project.
+      <b>Activity</b> (sidebar) = events across all your projects, plus a workspace leaderboard
+      ranking projects by submission score during a competition.
+    </p>
+
+    <div class="callout">
+      <b class="callout-label">WBCD scoring</b>
+      <p>
+        The leaderboard shows current submission scores during an active competition window.
+        For exact scoring criteria, see the WBCD competition page (linked from the workspace
+        banner during competitions).
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── 11 · Settings ────────────────────────────────────────────── -->
+  <section class="sec" id="settings">
+    <div class="sec-num">11</div>
+    <h2>Settings</h2>
+
+    <p>
+      Bottom-left of the sidebar. Two sections:
+    </p>
+    <ul>
+      <li><b>Profile</b> — display name, email, default project to land on after sign-in.</li>
+      <li><b>API tokens</b> — create / revoke personal access tokens for the CLI or scripts. Tokens inherit your account's roles.</li>
+      <li><b>Notifications</b> — per-category toggles for email + in-app: edit completes, export ready, team invite, episode flag, import fail, weekly digest.</li>
+    </ul>
+    <p>
+      If you're an org admin you'll also see Organization, Quota &amp; billing, and Audit log —
+      covered in the Admin Guide (separate doc).
+    </p>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       Reference
+       ═══════════════════════════════════════════════════════════════════ -->
+  <div class="part-label">Reference</div>
+
+  <!-- ─── 12 · Shortcuts ───────────────────────────────────────────── -->
+  <section class="sec" id="shortcuts">
+    <div class="sec-num">12</div>
+    <h2>Shortcuts</h2>
+
+    <table class="tbl">
+      <thead><tr><th>Action</th><th>Shortcut</th></tr></thead>
+      <tbody>
+        <tr><td>Global search</td><td><kbd>⌘</kbd> <kbd>K</kbd></td></tr>
+        <tr><td>Toggle theme (light / dark)</td><td>Sun / moon button, top-right</td></tr>
+        <tr><td>Confirm a popover</td><td><kbd>↵</kbd></td></tr>
+        <tr><td>Cancel any popover</td><td><kbd>Esc</kbd></td></tr>
+        <tr><td>Open episode in editor</td><td>Double-click the row</td></tr>
+        <tr><td>Editor — play / pause</td><td><kbd>Space</kbd></td></tr>
+        <tr><td>Editor — previous / next frame</td><td><kbd>J</kbd> / <kbd>L</kbd></td></tr>
+        <tr><td>Editor — previous / next episode</td><td><kbd>P</kbd> / <kbd>N</kbd></td></tr>
+        <tr><td>Editor — Select tool</td><td><kbd>V</kbd></td></tr>
+        <tr><td>Editor — Keyframe tool</td><td><kbd>K</kbd></td></tr>
+        <tr><td>Editor — Tag tool</td><td><kbd>R</kbd></td></tr>
+        <tr><td>Editor — Trim tool</td><td><kbd>T</kbd></td></tr>
+        <tr><td>Editor — Locate</td><td><kbd>L</kbd></td></tr>
+        <tr><td>Editor — Add keyframe at playhead</td><td><kbd>Shift</kbd> <kbd>K</kbd></td></tr>
+        <tr><td>Editor — Add tag at playhead</td><td><kbd>Shift</kbd> <kbd>T</kbd></td></tr>
+        <tr><td>Editor — Save current draft</td><td><kbd>⌘</kbd> <kbd>S</kbd></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ─── 13 · FAQ ─────────────────────────────────────────────────── -->
+  <section class="sec" id="faq">
+    <div class="sec-num">13</div>
+    <h2>FAQ</h2>
+
+    <details class="faq" open>
+      <summary>If I close a project tab, do I lose anything?</summary>
+      <div class="body">
+        <p>No. The project moves to <i>Recent projects ⌄</i> at the right of the tab strip. Click to reopen.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Can two people work on the same project at once?</summary>
+      <div class="body">
+        <p>Yes. You'll see each other's actions in near-real-time in the History tab. The one exception is the editor — two people can't edit the same episode at the same time.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>What happens to data I remove from my project's folder?</summary>
+      <div class="body">
+        <p>It only leaves your project. The source dataset still lives in the catalog and any other project that pulled it in still has it. You can re-add it any time.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Why don't I see the project my teammate told me about?</summary>
+      <div class="body">
+        <p>They haven't invited you yet. Ask them to add you under <i>Project members</i>.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Can I drag-and-drop files into folders?</summary>
+      <div class="body">
+        <p>Not yet. Use <i>Move to…</i> on selected rows, or the <i>Add to project</i> popover from the Explorer.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>My import got stuck — what happened?</summary>
+      <div class="body">
+        <p>If a stage takes longer than its timeout, the row will switch to <i>failed</i> with an error message. Click the row's ⋯ menu and pick <i>Retry</i>; the wizard re-opens with your original settings.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>Where do I find my API tokens?</summary>
+      <div class="body">
+        <p>Bottom-left of the sidebar → <i>Settings</i> → <i>API tokens</i>. Tokens inherit your account's roles, so a token created by an editor can only do editor things.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>What format do I submit to WBCD?</summary>
+      <div class="body">
+        <p>LeRobot. From your project's folder, open the Exports tab, pick the <b>LeRobot</b> format tile, queue the export, and upload the file when it's ready.</p>
+      </div>
+    </details>
+
+    <details class="faq">
+      <summary>How do I share my annotations with a teammate?</summary>
+      <div class="body">
+        <p>Save them as an annotation set. From the editor, save your edits once you're happy, then in the version dropdown choose <i>Save as annotation set</i>. Teammates with editor access can load it on any matching episode from the same dropdown.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ─── 14 · Help ────────────────────────────────────────────────── -->
+  <section class="sec" id="help">
+    <div class="sec-num">14</div>
+    <h2>Getting help</h2>
+
+    <ol>
+      <li><b>This guide.</b> Click <b>?</b> in the bottom-left of the sidebar to reopen.</li>
+      <li><b>The command palette.</b> <kbd>⌘K</kbd> searches every dataset, episode, folder, project, member, and help topic. Often the fastest way.</li>
+      <li><b>Report an issue.</b> The Help panel's <i>Report an issue</i> link captures your current state and routes it to the support team.</li>
+    </ol>
+
+    <div class="callout callout--a">
+      <b class="callout-label">WBCD support</b>
+      <p>
+        During an active WBCD competition window, the <b>#wbcd-support</b> Slack channel has
+        &lt; 30 minute response time, 24/7. Outside that window, expect same-business-day on
+        email.
+      </p>
+    </div>
+  </section>
+
+  <footer style="margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--nm-border); display:flex; align-items:baseline; gap: 18px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--nm-text-faint); text-transform: uppercase; letter-spacing: .12em; flex-wrap: wrap;">
+    <span>End of user guide</span>
+    <span>·</span>
+    <span>Questions? <b style="color:var(--nm-accent-a);">?</b> in the bottom-left of any project</span>
+    <span style="margin-left: auto;">NM Data Platform · WBCD 2026</span>
+  </footer>
+</main>
+</body>
+</html>
